@@ -27,11 +27,12 @@ type Worker struct {
 }
 
 type JobChunk struct {
-	ID    string `json:"id"`
-	JobID string `json:"jobId"`
-	Start int    `json:"start"`
-	End   int    `json:"end"`
-	Hash  string `json:"hash"` // Provided by server for context
+	ID      string `json:"id"`
+	JobID   string `json:"jobId"`
+	Start   int    `json:"start"`
+	End     int    `json:"end"`
+	Hash    string `json:"hash"`    // Provided by server for context
+	Charset string `json:"charset"` // Dynamic charset for this job
 }
 
 type ChunkResponse struct {
@@ -163,7 +164,13 @@ func (w *Worker) subscribeToStream() {
 
 				// Simulate work
 				start := time.Now()
-				result := w.crack(chunk.Hash, chunk.Start, chunk.End)
+				// Use charset from chunk, or default if missing (for backward compat/dummy jobs)
+				charset := chunk.Charset
+				if charset == "" {
+					charset = "abcdefghijklmnopqrstuvwxyz0123456789"
+				}
+
+				result := w.crack(chunk.Hash, chunk.Start, chunk.End, charset)
 				elapsed := time.Since(start).Seconds()
 
 				hashCount := chunk.End - chunk.Start + 1
@@ -176,15 +183,12 @@ func (w *Worker) subscribeToStream() {
 	}
 }
 
-const charset = "abcdefghijklmnopqrstuvwxyz0123456789"
-const charsetLen = len(charset)
-
-func (w *Worker) crack(hash string, start int, end int) string {
+func (w *Worker) crack(hash string, start int, end int, charset string) string {
 	// Optimization: Zero-allocation using byte slice
-	currentBytes := indexToBytes(start)
+	currentBytes := indexToBytes(start, charset)
 	targetBytes, _ := hex.DecodeString(hash)
 
-	log.Printf("Cracking range %d-%d for hash %s", start, end, hash)
+	log.Printf("Cracking range %d-%d for hash %s (Charset: %d chars)", start, end, hash, len(charset))
 
 	for i := start; i <= end; i++ {
 		// MD5 of currentBytes
@@ -197,14 +201,15 @@ func (w *Worker) crack(hash string, start int, end int) string {
 
 		// Prepare for next iteration
 		if i < end {
-			incrementBytes(currentBytes)
+			incrementBytes(currentBytes, charset)
 		}
 	}
 
 	return ""
 }
 
-func indexToBytes(n int) []byte {
+func indexToBytes(n int, charset string) []byte {
+	charsetLen := len(charset)
 	if n == 0 {
 		return []byte{charset[0]}
 	}
@@ -221,7 +226,8 @@ func indexToBytes(n int) []byte {
 	return s
 }
 
-func incrementBytes(b []byte) {
+func incrementBytes(b []byte, charset string) {
+	charsetLen := len(charset)
 	n := len(b)
 	for i := n - 1; i >= 0; i-- {
 		charIdx := strings.IndexByte(charset, b[i])
@@ -231,14 +237,7 @@ func incrementBytes(b []byte) {
 		}
 		b[i] = charset[0]
 	}
-	// Note: We don't handle length overflow here (e.g. "z" -> "aa")
-	// because that requires resizing slice. For chunks within same length tier, this is safe.
-	// For cross-tier chunks, this would need complex handling or strict chunk boundaries.
-	// Given our chunk sizes and keyspace, let's assume valid scope or handle it?
-	// Actually for simplicity/safety in this demo, let's just assume we don't cross tiers often
-	// OR just crash/fail if we do? No.
-	// In the real world for "000000" cracking, we are in the 6-char zone (2B keyspace).
-	// We won't cross to 7 chars.
+	// No length overflow handling as discussed
 }
 
 func (w *Worker) submitResult(chunkID string, result string, hashrate float64) {

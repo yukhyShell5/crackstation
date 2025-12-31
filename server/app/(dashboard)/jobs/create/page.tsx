@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -8,60 +8,37 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-export default function CreateJobPage() {
-const [hash, setHash] = useState("")
-const [complexity, setComplexity] = useState("standard")
-const [keyspace, setKeyspace] = useState(0)
-const [chunkSize, setChunkSize] = useState(0)
-const [isLoading, setIsLoading] = useState(false)
-const router = useRouter()
+type CharsetKey = 'lowerAlphaNum' | 'mixedAlphaNum' | 'fullAscii';
 
-// Presets
-// Standard: Up to 6 chars (2.2B) - Quick for clusters
-// Deep: Up to 7 chars (78B) - Hours/Days
-// Extreme: Up to 8 chars (2.8T) - Weeks/Months (without massive cluster)
-const PRESETS = {
-    standard: { label: "Standard (Up to 6 chars)", maxLength: 6 },
-    deep: { label: "Deep Search (Up to 7 chars)", maxLength: 7 },
-    extreme: { label: "Extreme (Up to 8 chars)", maxLength: 8 },
+const CHARSETS: Record<CharsetKey, { label: string, value: string }> = {
+  lowerAlphaNum: { label: "Standard (a-z0-9)", value: "abcdefghijklmnopqrstuvwxyz0123456789" },
+  mixedAlphaNum: { label: "Mixed Case (a-zA-Z0-9)", value: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" },
+  fullAscii: { label: "All Symbols (Full ASCII)", value: " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~" },
 };
 
-useEffect(() => {
-    // @ts-ignore
-    const maxLength = PRESETS[complexity].maxLength;
-    
-    // Calculate Keyspace
-    let total = 0;
-    let powerOf36 = 1;
-    for (let i = 1; i <= maxLength; i++) {
-        powerOf36 *= 36;
-        total += powerOf36;
-    }
-    setKeyspace(total);
-
-    // Auto Chunk Size
-    const targetChunkSize = 3000000000; // 3B
-    
-    if (total < targetChunkSize) {
-        setChunkSize(Math.max(Math.floor(total / 4), 100000));
-    } else {
-        setChunkSize(targetChunkSize);
-    }
-
-}, [complexity]);
+export default function CreateJobPage() {
+const [hash, setHash] = useState("")
+const [charsetKey, setCharsetKey] = useState<CharsetKey>("lowerAlphaNum")
+const [isLoading, setIsLoading] = useState(false)
+const router = useRouter()
 
 const handleSubmit = async (e: React.FormEvent) => {
  e.preventDefault()
  setIsLoading(true)
 
  try {
+   // Incremental Mode: We don't define keyspace or checks manually anymore.
+   // We pass 0 as keyspace/chunkSize to let server defaults handle the "Wave 1" init.
+   // Server will default chunkSize to 10M or similar.
+   
    const res = await fetch("/api/jobs/create", {
      method: "POST",
      headers: { "Content-Type": "application/json" },
      body: JSON.stringify({
        hash,
-       keyspace,
-       chunkSize,
+       keyspace: 0, // Ignored/Auto
+       chunkSize: 50000000, // 50M seems good for granular distribution
+       charset: CHARSETS[charsetKey].value
      }),
    })
 
@@ -84,7 +61,7 @@ return (
    <Card>
      <CardHeader>
        <CardTitle>Crack New Hash</CardTitle>
-       <CardDescription>Enter the target hash. The system will auto-configure the attack.</CardDescription>
+       <CardDescription>Incremental "Blind" Attack. System starts small and expands automatically.</CardDescription>
      </CardHeader>
      <form onSubmit={handleSubmit}>
        <CardContent className="space-y-6">
@@ -103,38 +80,36 @@ return (
          </div>
 
          <div className="space-y-2">
-            <Label>Search Complexity</Label>
-            <Select value={complexity} onValueChange={setComplexity}>
+            <Label>Charset Strategy</Label>
+            <Select value={charsetKey} onValueChange={(v) => setCharsetKey(v as CharsetKey)}>
                 <SelectTrigger>
                     <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                    <SelectItem value="standard">Standard (Fast)</SelectItem>
-                    <SelectItem value="deep">Deep Search (Thorough)</SelectItem>
-                    <SelectItem value="extreme">Extreme (Long Runtime)</SelectItem>
+                    {Object.entries(CHARSETS).map(([key, { label }]) => (
+                        <SelectItem key={key} value={key}>{label}</SelectItem>
+                    ))}
                 </SelectContent>
             </Select>
             <p className="text-xs text-muted-foreground mt-1">
-                "Standard" covers most weak passwords. Use "Deep" or "Extreme" if Standard fails.
+                Start with Standard if unsure. Mixed/Symbols will be much slower to expand.
             </p>
          </div>
-
+         
          <div className="p-4 bg-slate-50 dark:bg-slate-900 rounded-md border text-sm text-muted-foreground">
-             <div className="flex justify-between mb-1">
-                <span>Estimated Search Space:</span>
-                <span className="font-mono text-foreground">{keyspace.toLocaleString()} combinations</span>
-             </div>
-             <div className="flex justify-between">
-                <span>Max Runtime (1 Worker):</span>
-                <span className="font-mono text-foreground">
-                {keyspace > 5000000 * 60 * 60 ? `~${((keyspace / 5000000) / 3600).toFixed(1)} hours` : `~${((keyspace / 5000000) / 60).toFixed(1)} mins`}
-                </span>
-             </div>
+             <p className="mb-2 font-semibold text-foreground">How it works:</p>
+             <ul className="list-disc pl-5 space-y-1">
+                 <li>Starts checking Length 1-4 immediately (Instant).</li>
+                 <li>Then expands to Length 5 (Seconds/Minutes).</li>
+                 <li>Then Length 6 (Minutes/Hours)... and so on.</li>
+             </ul>
+             <p className="mt-2 text-xs">Work is split into small chunks so all workers contribute.</p>
          </div>
+
        </CardContent>
        <CardFooter>
          <Button type="submit" disabled={isLoading} className="w-full">
-           {isLoading ? "Broadcasting Job..." : "Start Global Attack"}
+           {isLoading ? "Broadcasting..." : "Launch Attack 🚀"}
          </Button>
        </CardFooter>
      </form>

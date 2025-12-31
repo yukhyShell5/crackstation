@@ -17,7 +17,10 @@ export interface JobChunk {
 export interface Job {
   id: string;
   hash: string;
+  charset: string;
   status: JobStatus;
+  maxLengthSearched: number;
+  nextStartIndex: number;
   // totalKeyspace and chunkSize define how we split the work.
   // For demo: keyspace 0-1000000
   totalKeyspace: number;
@@ -34,6 +37,7 @@ export interface Client {
   status: 'online' | 'offline';
   ip: string;
   userAgent: string;
+  restrictedToJobId?: string;
 }
 
 class Store extends EventEmitter {
@@ -80,9 +84,31 @@ class Store extends EventEmitter {
   addWorkerStream(clientId: string, callback: (data: any) => void, forceJobId?: string) {
       this.workerStreams.set(clientId, callback);
       
-      // If forced job, assign immediately
+      // Persist restriction if forced
+      // Ensure client exists in map (it might not if they skipped /api/info)
+      if (!this.clients.has(clientId)) {
+          this.clients.set(clientId, {
+              id: clientId,
+              lastSeen: new Date(),
+              status: 'online',
+              ip: 'unknown',
+              userAgent: 'unknown'
+          });
+      }
+
       if (forceJobId) {
+          const client = this.clients.get(clientId);
+          if (client) {
+              client.restrictedToJobId = forceJobId;
+          }
           this.assignWorkerToJob(clientId, forceJobId);
+      } else {
+          // If no forceJobId, clear any previous restriction? 
+          // Assuming reconnection without flag means general worker.
+          const client = this.clients.get(clientId);
+          if (client) {
+             delete client.restrictedToJobId;
+          }
       }
 
       // Immediately try to send work
@@ -117,7 +143,8 @@ class Store extends EventEmitter {
           push({ 
               chunk: {
                   ...chunk,
-                  hash: job?.hash 
+                  hash: job?.hash,
+                  charset: job?.charset 
               } 
           });
           // Note: assignChunk emits 'update', which updates the dashboard
@@ -132,16 +159,29 @@ class Store extends EventEmitter {
     }
   }
 
-  createJob(hash: string, totalKeyspace: number = 1000000, chunkSize: number = 10000) {
+  createJob(hash: string, totalKeyspace: number = 0, chunkSize: number = 10000000, charset: string = 'abcdefghijklmnopqrstuvwxyz0123456789') {
     const id = uuidv4();
+    const charsetLen = charset.length;
     
-    // Generate chunks upfront for simplicity in this POC
+    // Wave 1: Lengths 1 to 4.
+    // Calculate initial keyspace for Wave 1
+    let wave1Total = 0;
+    let power = 1;
+    for (let i = 1; i <= 4; i++) {
+        power *= charsetLen;
+        wave1Total += power;
+    }
+
+    // Generate chunks for Wave 1
     const chunks: JobChunk[] = [];
-    const numChunks = Math.ceil(totalKeyspace / chunkSize);
+    // Adjust chunk size if wave1 is small (keep at least 1 chunk)
+    const effectiveChunkSize = Math.min(chunkSize, Math.max(Math.floor(wave1Total / 4), 10000)) || 10000;
+    
+    const numChunks = Math.ceil(wave1Total / effectiveChunkSize);
     
     for (let i = 0; i < numChunks; i++) {
-        const start = i * chunkSize;
-        const end = Math.min((i + 1) * chunkSize - 1, totalKeyspace - 1);
+        const start = i * effectiveChunkSize;
+        const end = Math.min((i + 1) * effectiveChunkSize - 1, wave1Total - 1);
         chunks.push({
             id: uuidv4(),
             jobId: id,
@@ -156,9 +196,12 @@ class Store extends EventEmitter {
     this.jobs.set(id, {
       id,
       hash,
-      status: 'pending',
-      totalKeyspace,
-      chunkSize,
+      charset,
+      status: 'pending', // or 'in-progress' logic handled later
+      maxLengthSearched: 4,
+      nextStartIndex: wave1Total,
+      totalKeyspace: wave1Total, // Tracks currently generated keyspace
+      chunkSize: chunkSize, // Keep preferred chunk size for later waves
       chunks,
       result: null,
       createdAt: new Date(),
@@ -186,12 +229,26 @@ class Store extends EventEmitter {
         return job.chunks.find(c => c.status === 'pending') || null;
     };
 
-    // 1. Force Job
-    if (forceJobId) {
-        const chunk = findChunkInJob(forceJobId);
+    // 1. Force Job (Argument or Persisted)
+    let targetJobId = forceJobId;
+
+    if (!targetJobId) {
+        const client = this.clients.get(clientId);
+        if (client && client.restrictedToJobId) {
+            targetJobId = client.restrictedToJobId;
+        }
+    }
+
+    if (targetJobId) {
+        // Strict Mode: Only work on this job
+        const chunk = findChunkInJob(targetJobId);
         if (chunk) {
-            this.assignWorkerToJob(clientId, forceJobId);
+            this.assignWorkerToJob(clientId, targetJobId);
             return chunk;
+        } else {
+            // If restricted job has no chunks, DO NOT fall through.
+            // Return null to idle until more chunks appear (e.g. expansion).
+            return null;
         }
     }
 
@@ -282,15 +339,8 @@ class Store extends EventEmitter {
                   // Check if all chunks are done
                   const allDone = job.chunks.every(c => c.status === 'completed');
                   if (allDone && !job.result) {
-                      job.status = 'failed'; // Exhausted keyspace
-                      job.updatedAt = new Date();
-                      
-                      // Clear assignments
-                      for (const [clientId, jobId] of this.workerAssignments.entries()) {
-                        if (jobId === job.id) {
-                            this.workerAssignments.delete(clientId);
-                        }
-                    }
+                      // Instead of failed, we EXPAND!
+                      this.expandJob(job.id);
                   }
               }
               this.emit('update');
@@ -301,6 +351,56 @@ class Store extends EventEmitter {
               }
               return;
           }
+      }
+  }
+
+  expandJob(jobId: string) {
+      const job = this.jobs.get(jobId);
+      if (!job || job.status === 'completed' || job.status === 'failed') return;
+
+      const nextLength = job.maxLengthSearched + 1;
+      const charsetLen = job.charset.length;
+      
+      // Calculate keyspace for just this new length
+      // Count = B^L
+      const newKeyspaceCount = Math.pow(charsetLen, nextLength);
+      
+      const startOffset = job.nextStartIndex;
+      const endOffset = startOffset + newKeyspaceCount;
+
+      console.log(`[Job ${jobId}] Expanding to Length ${nextLength} (Keyspace: +${newKeyspaceCount})...`);
+
+      // Generate Chunks
+      // Use job.chunkSize (likely 10M-100M).
+      // For large waves, this ensures MANY chunks -> Distributed work!
+      const numNewChunks = Math.ceil(newKeyspaceCount / job.chunkSize);
+      
+      for (let i = 0; i < numNewChunks; i++) {
+          const s = startOffset + (i * job.chunkSize);
+          const e = Math.min(startOffset + ((i + 1) * job.chunkSize) - 1, endOffset - 1);
+          
+          job.chunks.push({
+              id: uuidv4(),
+              jobId: job.id,
+              start: s,
+              end: e,
+              status: 'pending',
+              assignedTo: null,
+              updatedAt: new Date()
+          });
+      }
+
+      job.maxLengthSearched = nextLength;
+      job.nextStartIndex = endOffset;
+      job.totalKeyspace += newKeyspaceCount;
+      job.status = 'in-progress'; // Ensure it stays active
+      job.updatedAt = new Date();
+      
+      this.emit('update');
+      
+      // Notify idle workers
+      for (const clientId of this.workerStreams.keys()) {
+          this.dispatch(clientId);
       }
   }
 
