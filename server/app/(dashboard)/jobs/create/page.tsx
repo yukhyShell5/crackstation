@@ -61,7 +61,7 @@ return (
    <Card>
      <CardHeader>
        <CardTitle>Crack New Hash</CardTitle>
-       <CardDescription>Incremental "Blind" Attack. System starts small and expands automatically.</CardDescription>
+       <CardDescription>Incremental &quot;Blind&quot; Attack. System starts small and expands automatically.</CardDescription>
      </CardHeader>
      <form onSubmit={handleSubmit}>
        <CardContent className="space-y-6">

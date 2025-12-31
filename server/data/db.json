@@ -1,0 +1,445 @@
+{
+  "jobs": [
+    [
+      "db91c797-67e6-4757-8bbf-77267697391e",
+      {
+        "id": "db91c797-67e6-4757-8bbf-77267697391e",
+        "hash": "ab56b4d92b40713acc5af89985d4b786",
+        "charset": "abcdefghijklmnopqrstuvwxyz0123456789",
+        "status": "pending",
+        "maxLengthSearched": 4,
+        "nextStartIndex": 1727604,
+        "totalKeyspace": 1727604,
+        "chunkSize": 50000,
+        "chunks": [
+          {
+            "id": "f8cf2276-9cca-40dd-a7e1-72981fbd1b4b",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 0,
+            "end": 49999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "672d164f-31c0-41c5-b582-c3e48037de3a",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 50000,
+            "end": 99999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "6f21b0ad-ea61-45c5-bb29-60242a535a99",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 100000,
+            "end": 149999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "fcbfab16-28ff-46d4-b7a1-0367b4a33a82",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 150000,
+            "end": 199999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "1f9bd461-e107-47d1-a223-d3fa09a43610",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 200000,
+            "end": 249999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "fd37a4a2-3faa-42bf-a5c1-88e5966ba4a9",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 250000,
+            "end": 299999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "67fc8599-dc80-472d-a8db-eae81e70dae5",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 300000,
+            "end": 349999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "6fd75d4d-200b-450d-bf39-29b020506e1b",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 350000,
+            "end": 399999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "3df5a487-5391-49e2-8727-ad3d8b65aa9d",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 400000,
+            "end": 449999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "41c1dcc3-8e25-4cb3-bfc6-29d0a11315b5",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 450000,
+            "end": 499999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "e8c90378-545c-41e3-a125-c0c7be06b67e",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 500000,
+            "end": 549999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "3e6aa491-4eb7-4991-9ddf-4c1da5854796",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 550000,
+            "end": 599999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "e50ba148-7738-4bb8-aa19-3d57584a1be0",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 600000,
+            "end": 649999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "d6dcd57c-18ac-4098-b610-88e4dfda70f8",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 650000,
+            "end": 699999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "e9426c3e-d693-476f-a8ba-3b4a84038430",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 700000,
+            "end": 749999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "0fb34a96-d23a-46eb-b677-f38eeaedfa3d",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 750000,
+            "end": 799999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "325d736d-2a90-44e9-a4b6-4281aa8885d6",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 800000,
+            "end": 849999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "58dd4d27-b687-46de-9fb2-ab330edeae93",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 850000,
+            "end": 899999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "9b51e818-d5a0-4678-97f3-a92e7c828a10",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 900000,
+            "end": 949999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "a260162e-e10f-49a1-8967-7d17193ad3cf",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 950000,
+            "end": 999999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "b8822f2f-e0a0-4af0-b772-fe9ee3489630",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 1000000,
+            "end": 1049999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "bf28566d-8930-464d-b791-f37de804301c",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 1050000,
+            "end": 1099999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "c140a563-3e3c-4224-b201-6c13e4dacfad",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 1100000,
+            "end": 1149999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "e8193cd8-b662-45e6-9098-45fea5895de2",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 1150000,
+            "end": 1199999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "3d3a48e5-47b9-4c05-8543-e9055f0bedce",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 1200000,
+            "end": 1249999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "1f0e421e-5b09-4e5d-b77c-409026f0c4de",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 1250000,
+            "end": 1299999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "bfe1739c-fbeb-4baa-b570-a8e20b577257",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 1300000,
+            "end": 1349999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "08dcdca2-a72b-4b7a-8adc-e53279fa4ef3",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 1350000,
+            "end": 1399999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "194fd72b-f954-4c92-b397-03ab24ece92f",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 1400000,
+            "end": 1449999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "4d0cf05b-d581-43a5-bd52-836c5bd3ac7e",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 1450000,
+            "end": 1499999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "0eb8ae81-397a-49a1-897b-e842a8346d0d",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 1500000,
+            "end": 1549999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "45ffa9cf-2028-455d-88a2-fdd581e098aa",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 1550000,
+            "end": 1599999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "ca57b9a5-acd6-4200-b7ce-91c53dd05b41",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 1600000,
+            "end": 1649999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "ca13ea83-23de-4785-a7e7-4063df2fe865",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 1650000,
+            "end": 1699999,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          },
+          {
+            "id": "26b49970-c0a7-42ff-84b2-d26c3c6d7cc7",
+            "jobId": "db91c797-67e6-4757-8bbf-77267697391e",
+            "start": 1700000,
+            "end": 1727603,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.854Z"
+          }
+        ],
+        "result": null,
+        "createdAt": "2025-12-31T14:51:04.854Z",
+        "updatedAt": "2025-12-31T14:51:04.854Z"
+      }
+    ],
+    [
+      "a4903adf-1e92-4435-b2d0-156e4eb702ce",
+      {
+        "id": "a4903adf-1e92-4435-b2d0-156e4eb702ce",
+        "hash": "670b14728ad9902aecba32e22fa4f6bd",
+        "charset": "abcdefghijklmnopqrstuvwxyz0123456789",
+        "status": "pending",
+        "maxLengthSearched": 4,
+        "nextStartIndex": 1727604,
+        "totalKeyspace": 1727604,
+        "chunkSize": 500000000,
+        "chunks": [
+          {
+            "id": "79f509f3-176f-4936-9b50-4a7d58ca9fa7",
+            "jobId": "a4903adf-1e92-4435-b2d0-156e4eb702ce",
+            "start": 0,
+            "end": 431900,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.870Z"
+          },
+          {
+            "id": "ed530621-6d98-4e68-bbc5-3dba142504ff",
+            "jobId": "a4903adf-1e92-4435-b2d0-156e4eb702ce",
+            "start": 431901,
+            "end": 863801,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.870Z"
+          },
+          {
+            "id": "cb27c0a4-a572-44bd-a669-e7c49333d161",
+            "jobId": "a4903adf-1e92-4435-b2d0-156e4eb702ce",
+            "start": 863802,
+            "end": 1295702,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.870Z"
+          },
+          {
+            "id": "e2f30159-3512-4447-9abd-fdff8690bfed",
+            "jobId": "a4903adf-1e92-4435-b2d0-156e4eb702ce",
+            "start": 1295703,
+            "end": 1727603,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.870Z"
+          }
+        ],
+        "result": null,
+        "createdAt": "2025-12-31T14:51:04.870Z",
+        "updatedAt": "2025-12-31T14:51:04.870Z"
+      }
+    ],
+    [
+      "ea1c7349-b2ad-48c0-8880-fadf6ccc9acb",
+      {
+        "id": "ea1c7349-b2ad-48c0-8880-fadf6ccc9acb",
+        "hash": "29c3eea3f305d6b823f562ac4be35217",
+        "charset": "abcdefghijklmnopqrstuvwxyz0123456789",
+        "status": "pending",
+        "maxLengthSearched": 4,
+        "nextStartIndex": 1727604,
+        "totalKeyspace": 1727604,
+        "chunkSize": 3000000000,
+        "chunks": [
+          {
+            "id": "c5a973e6-63af-438b-af3c-1c22fa61fbca",
+            "jobId": "ea1c7349-b2ad-48c0-8880-fadf6ccc9acb",
+            "start": 0,
+            "end": 431900,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.870Z"
+          },
+          {
+            "id": "0105ef2a-af2a-404e-a962-22e2e69cfe13",
+            "jobId": "ea1c7349-b2ad-48c0-8880-fadf6ccc9acb",
+            "start": 431901,
+            "end": 863801,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.870Z"
+          },
+          {
+            "id": "66ff0e65-5b0b-4e84-91c5-10a418e3bc98",
+            "jobId": "ea1c7349-b2ad-48c0-8880-fadf6ccc9acb",
+            "start": 863802,
+            "end": 1295702,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.870Z"
+          },
+          {
+            "id": "5aa1a8ff-98ab-4d9c-9ade-08d6a8a8ed21",
+            "jobId": "ea1c7349-b2ad-48c0-8880-fadf6ccc9acb",
+            "start": 1295703,
+            "end": 1727603,
+            "status": "pending",
+            "assignedTo": null,
+            "updatedAt": "2025-12-31T14:51:04.870Z"
+          }
+        ],
+        "result": null,
+        "createdAt": "2025-12-31T14:51:04.870Z",
+        "updatedAt": "2025-12-31T14:51:04.870Z"
+      }
+    ]
+  ]
+}

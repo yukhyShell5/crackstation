@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     const jobId = store.createJob(hash, effectiveKeyspace, effectiveChunkSize, charset);
     
     return NextResponse.json({ jobId });
-  } catch (error) {
+  } catch {
       return NextResponse.json({ error: "Invalid request payload" }, { status: 400 });
   }
 }

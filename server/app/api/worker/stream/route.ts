@@ -19,7 +19,7 @@ export async function GET(request: Request) {
         start(controller) {
             
             // Function to push data to this specific client
-            const pushData = (data: any) => {
+            const pushData = (data: unknown) => {
                 const json = JSON.stringify(data);
                 controller.enqueue(encoder.encode(`data: ${json}\n\n`));
             };

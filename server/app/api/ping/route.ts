@@ -16,8 +16,8 @@ export async function POST(request: Request) {
         store.heartbeat(id);
     }
 
-    return NextResponse.json({ status: "acknowledged" });
-  } catch (error) {
+    return NextResponse.json({ status: 'ok' });
+  } catch {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 }
